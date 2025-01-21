@@ -5,30 +5,5 @@
 </head>
 <body>
     <h1>Données de qualité de l'air</h1>
-    <div id="data"></div>
-
-    <script>
-        async function fetchData() {
-            const url = "https://api.tago.io/data";
-            const token = "0e7f20b0-d4e2-4715-9a06-8559b0dbdf11"; // Remplacez par votre token TagoIO
-
-            try {
-                const response = await fetch(url, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": token
-                    }
-                });
-                const data = await response.json();
-                const container = document.getElementById("data");
-                container.innerHTML = JSON.stringify(data, null, 2);
-            } catch (error) {
-                console.error("Erreur lors de la récupération des données :", error);
-            }
-        }
-
-        // Charger les données au démarrage
-        fetchData();
-    </script>
 </body>
 </html>
