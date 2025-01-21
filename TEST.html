@@ -1,124 +1,21 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Surveillance de la qualité de l'air</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
-        #data-container { margin-top: 20px; display: flex; justify-content: center; gap: 20px; }
-        .data-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
-        canvas { max-width: 600px; margin-top: 20px; }
-    </style>
-</head>
-<body>
-    <h1>Surveillance de la qualité de l'air</h1>
-    <button onclick="fetchData()">Actualiser les données</button>
-    <div id="data-container">
-        <div class="data-box"><h3>CO2</h3><p id="co2">-- ppm</p></div>
-        <div class="data-box"><h3>Température</h3><p id="temperature">-- °C</p></div>
-        <div class="data-box"><h3>Humidité</h3><p id="humidity">-- %</p></div>
-    </div>
-    <canvas id="chart"></canvas>
-
-    <script>
-        const url = "https://api.tago.io/data";
-        const token = "6cca02c5-85b8-44e8-b676-0b73999f029f"; // Remplacez par votre Token TagoIO
-
-        let chart;
-        let labels = [];
-        let co2Data = [];
-        let temperatureData = [];
-        let humidityData = [];
-
-        function decodePayload(hexString) {
-            let bytes = hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16));
-            let co2 = (bytes[0] << 8) | bytes[1];  // CO₂ (ppm)
-            let temp = ((bytes[2] << 8) | bytes[3]) / 100;  // Température (°C)
-            let hum = ((bytes[4] << 8) | bytes[5]) / 100;  // Humidité (%)
-
-            return { co2, temp, hum };
-        }
-
-        async function fetchData() {
-            console.log("⏳ Récupération des données depuis TagoIO...");
-            console.log("🔑 Token utilisé :", token);
-
-            try {
-                const response = await fetch(url, {
-                    method: "GET",
-                    headers: { "Authorization": token, "Content-Type": "application/json" }
-                });
-
-                if (!response.ok) throw new Error(`Erreur HTTP : ${response.status}`);
-                
-                const data = await response.json();
-                console.log("✅ Données reçues :", data);
-
-                let payloadHex = data.result.find(d => d.variable === "frm_payload")?.value || null;
-
-                if (payloadHex) {
-                    let { co2, temp, hum } = decodePayload(payloadHex);
-                    document.getElementById("co2").innerText = co2 + " ppm";
-                    document.getElementById("temperature").innerText = temp + " °C";
-                    document.getElementById("humidity").innerText = hum + " %";
-
-                    updateChart(co2, temp, hum);
-                } else {
-                    document.getElementById("co2").innerText = "Pas de données";
-                    document.getElementById("temperature").innerText = "Pas de données";
-                    document.getElementById("humidity").innerText = "Pas de données";
-                }
-            } catch (error) {
-                console.error("❌ Erreur :", error);
-                document.getElementById("co2").innerText = "Erreur API";
-                document.getElementById("temperature").innerText = "Erreur API";
-                document.getElementById("humidity").innerText = "Erreur API";
-            }
-        }
-
-        function updateChart(co2, temp, hum) {
-            let now = new Date().toLocaleTimeString();
-            labels.push(now);
-            co2Data.push(co2);
-            temperatureData.push(temp);
-            humidityData.push(hum);
-
-            if (labels.length > 10) {
-                labels.shift();
-                co2Data.shift();
-                temperatureData.shift();
-                humidityData.shift();
-            }
-
-            chart.data.labels = labels;
-            chart.data.datasets[0].data = co2Data;
-            chart.data.datasets[1].data = temperatureData;
-            chart.data.datasets[2].data = humidityData;
-            chart.update();
-        }
-
-        function setupChart() {
-            const ctx = document.getElementById("chart").getContext("2d");
-            chart = new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: [],
-                    datasets: [
-                        { label: "CO2 (ppm)", borderColor: "red", data: [], fill: false },
-                        { label: "Température (°C)", borderColor: "blue", data: [], fill: false },
-                        { label: "Humidité (%)", borderColor: "green", data: [], fill: false }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: { y: { beginAtZero: false } }
-                }
-            });
-        }
-
-        setupChart();
-        fetchData();
-        setInterval(fetchData, 10000);
-    </script>
-</body>
+    <head>
+        <title>Une petite page HTML</title>
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <h1>Un titre de niveau 1</h1>
+        
+        <p>
+            Un premier petit paragraphe.
+        </p>
+        
+        <h2>Un titre de niveau 2</h2>
+        
+        <p>
+            Un autre paragraphe contenant un lien pour aller
+            sur le site <a href="http://koor.fr">KooR.fr</a>.
+        </p>
+    </body>
 </html>
