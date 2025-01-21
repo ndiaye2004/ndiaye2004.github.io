@@ -1,16 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Qualité de l'air</title>
+    <title>Qualité de l'air - TagoIO</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #data {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <h1>Données de qualité de l'air</h1>
-    <div id="data"></div>
+    <h1>Mesure de la qualité de l'air</h1>
+    <button onclick="fetchData()">Actualiser les données</button>
+    <div id="data">Données en attente...</div>
 
     <script>
         async function fetchData() {
             const url = "https://api.tago.io/data";
-            const token = "votre-account-token-tagoio"; // Remplacez par votre token TagoIO
+            const token = "0e7f20b0-d4e2-4715-9a06-8559b0dbdf11"; // Remplacez par votre token
 
             try {
                 const response = await fetch(url, {
@@ -19,15 +35,19 @@
                         "Authorization": token
                     }
                 });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.status}`);
+                }
+
                 const data = await response.json();
-                const container = document.getElementById("data");
-                container.innerHTML = JSON.stringify(data, null, 2);
+                document.getElementById("data").innerHTML = JSON.stringify(data, null, 2);
             } catch (error) {
-                console.error("Erreur lors de la récupération des données :", error);
+                document.getElementById("data").innerHTML = `Erreur : ${error.message}`;
             }
         }
 
-        // Charger les données au démarrage
+        // Charger automatiquement les données au démarrage
         fetchData();
     </script>
 </body>
