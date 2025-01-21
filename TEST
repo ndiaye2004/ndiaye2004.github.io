@@ -10,7 +10,7 @@
     <script>
         async function fetchData() {
             const url = "https://api.tago.io/data";
-            const token = "at32cff4dbc1d74a10b2e5fc1fd91c8981"; // Remplacez par votre token TagoIO
+            const token = "at0276e8dcb7424deda7b06a638712f9fc"; // Remplacez par votre token TagoIO
 
             try {
                 const response = await fetch(url, {
